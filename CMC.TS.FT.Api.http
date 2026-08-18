@@ -1,0 +1,6 @@
+@CMC.TS.FT.Api_HostAddress = http://localhost:5097
+
+GET {{CMC.TS.FT.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
