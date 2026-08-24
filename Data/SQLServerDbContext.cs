@@ -9,6 +9,7 @@ namespace CMC.TS.FT.Api.Data
         DbSet<Role> Role;
         DbSet<RolePermission> RolePermission;
         DbSet<UserRole> UserRole;
+        DbSet<Permission> Permission;
 
 
         public SQLServerDbContext(DbContextOptions builder) : base(builder)
