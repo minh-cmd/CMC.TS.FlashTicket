@@ -1,4 +1,8 @@
 
+using CMC.TS.FT.Api.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime;
+
 namespace CMC.TS.FT.Api
 {
     public class Program
@@ -13,6 +17,7 @@ namespace CMC.TS.FT.Api
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<SQLServerDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
