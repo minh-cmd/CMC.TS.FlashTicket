@@ -28,7 +28,6 @@ namespace CMC.TS.FT.Api
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             app.Run();
