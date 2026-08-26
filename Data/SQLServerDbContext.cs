@@ -5,11 +5,11 @@ namespace CMC.TS.FT.Api.Data
 {
     public class SQLServerDbContext : DbContext
     {
-        DbSet<User> User;
-        DbSet<Role> Role;
-        DbSet<RolePermission> RolePermission;
-        DbSet<UserRole> UserRole;
-        DbSet<Permission> Permission;
+        DbSet<User> User { get; set; }
+        DbSet<Role> Role { get; set; }
+        DbSet<RolePermission> RolePermission { get; set; }
+        DbSet<UserRole> UserRole { get; set; }
+        DbSet<Permission> Permission { get; set; }
 
 
         public SQLServerDbContext(DbContextOptions builder) : base(builder)
