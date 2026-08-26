@@ -1,6 +1,6 @@
 
 using CMC.TS.FT.Api.Data;
-using CMC.TS.FT.Api.Repositories;
+using CMC.TS.FT.Api.Repositories.GenericRepository;
 using CMC.TS.FT.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime;
