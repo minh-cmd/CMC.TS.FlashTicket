@@ -191,13 +191,18 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("update role operation start");
-                Role role = new Role
+                Role? role = await _roleRepository.GetById(updateRoleDTO.RoleId);
+                if (role == null)
                 {
-                    RoleId = updateRoleDTO.RoleId,
-                    RoleName = updateRoleDTO.RoleName,
-                    UpdateAt = DateTime.UtcNow,
-                    UpdateBy = Guid.Empty
-                };
+                    _logger.LogError("there is no role with {id}", updateRoleDTO.RoleId);
+                    return false;
+                }
+
+                role.RoleName = updateRoleDTO.RoleName;
+                role.UpdateBy = Guid.Empty;
+                role.UpdateAt = DateTime.UtcNow;
+                //bug không gán giá trị cho CreateAt, khiến khi update nó tự gán giá trị default 0001-01-01 00:00:00.0000000. Mất dữ liệu gốc
+
 
                 return await _roleRepository.Update(role);
             }

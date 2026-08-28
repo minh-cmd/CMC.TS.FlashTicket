@@ -48,7 +48,6 @@ namespace CMC.TS.FT.Api.Repositories.GenericRepository
             {
                 return false;
             }
-            _context.Set<T>().Update(entity);   
             bool isSuccess = await _context.SaveChangesAsync() > 0;
             if (isSuccess)
             {
