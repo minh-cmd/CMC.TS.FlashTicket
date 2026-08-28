@@ -1,6 +1,8 @@
 
 using CMC.TS.FT.Api.Data;
+using CMC.TS.FT.Api.Repositories;
 using CMC.TS.FT.Api.Repositories.GenericRepository;
+using CMC.TS.FT.Api.Repositories.IRepositories;
 using CMC.TS.FT.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime;
@@ -22,6 +24,9 @@ namespace CMC.TS.FT.Api
             builder.Services.AddDbContext<SQLServerDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<PermissionService>();
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+            builder.Services.AddScoped<RoleService>();
+
 
             var app = builder.Build();
 

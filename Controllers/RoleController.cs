@@ -15,15 +15,59 @@ namespace CMC.TS.FT.Api.Controllers
             _roleService = roleService;
         }
         
-        [HttpPut]
-        public async Task<IActionResult> AssignPermissionToRoleDTO(AssignPermissionToRoleDTO permissionToRoleDTO)
+        [HttpPut("{roleId:guid}/permission")]
+        public async Task<IActionResult> AssignPermissionToRoleDTO([FromRoute] Guid roleId, [FromBody] List<Guid>? permissionIds)
         {
+            
+            AssignPermissionToRoleDTO permissionToRoleDTO = new AssignPermissionToRoleDTO
+            {
+                RoleId = roleId,
+                PermissionIds = permissionIds
+            };
+            
             bool isSuccess = await _roleService.SyncRolePermission(permissionToRoleDTO);
             if (isSuccess)
             {
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DisplayAllRole()
+        {
+            List<DisplayRoleDTO>? displayRoles = await _roleService.DisplayAllRole();
+            return Ok(displayRoles);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveRole(Guid id)
+        {
+            bool isSuccess = await _roleService.DeleteRole(id);
+            if(isSuccess)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateNewRole(CreateRoleDTO roleDTO)
+        {
+            bool isSuccess = await _roleService.CreateNewRole(roleDTO);
+            if (isSuccess)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateRole(UpdateRoleDTO roleDTO)
+        {
+            bool isSuccess = await _roleService.UpdateRole(roleDTO);
+            if (isSuccess)
+                return Ok();
+            else
+                return BadRequest();
         }
     }
 }
