@@ -68,7 +68,7 @@ namespace CMC.TS.FT.Api.Services
                         RoleId = rolePermission.RoleId,
                         PermissionId = pi,
                         CreateAt = DateTime.UtcNow,
-                        UpdateAt = DateTime.UtcNow,
+                        UpdateAt = null,
                         CreateBy = Guid.Empty,
                         UpdateBy = Guid.Empty,
                     }).ToList();
@@ -211,6 +211,6 @@ namespace CMC.TS.FT.Api.Services
                 _logger.LogError(e, "update operation failed");
                 return false;
             }
-        }
+        }   
     }
 }
