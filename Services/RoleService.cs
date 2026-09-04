@@ -186,15 +186,15 @@ namespace CMC.TS.FT.Api.Services
                 return null;
             }
         }
-        public async Task<bool> UpdateRole(UpdateRoleDTO updateRoleDTO)
+        public async Task<bool> UpdateRole(Guid id, UpdateRoleDTO updateRoleDTO)
         {
             try
             {
                 _logger.LogInformation("update role operation start");
-                Role? role = await _roleRepository.GetById(updateRoleDTO.RoleId);
+                Role? role = await _roleRepository.GetById(id);
                 if (role == null)
                 {
-                    _logger.LogError("there is no role with {id}", updateRoleDTO.RoleId);
+                    _logger.LogError("there is no role with {id}", id);
                     return false;
                 }
 

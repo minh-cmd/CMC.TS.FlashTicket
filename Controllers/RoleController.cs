@@ -60,10 +60,10 @@ namespace CMC.TS.FT.Api.Controllers
                 return BadRequest();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateRole(UpdateRoleDTO roleDTO)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRole(Guid id, UpdateRoleDTO roleDTO)
         {
-            bool isSuccess = await _roleService.UpdateRole(roleDTO);
+            bool isSuccess = await _roleService.UpdateRole(id, roleDTO);
             if (isSuccess)
                 return Ok();
             else
