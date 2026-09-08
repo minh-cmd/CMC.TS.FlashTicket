@@ -119,8 +119,13 @@ namespace CMC.TS.FT.Api.Services
                     CreateBy = Guid.Empty,
                     UpdateBy = Guid.Empty
                 };
+                if (role == null)
+                {
+                    return false;
+                }
+                _roleRepository.Create(role);
+                bool isSuccess = await _roleRepository.SaveChangeAsync() > 0;
 
-                bool isSuccess = await _roleRepository.Create(role);
                 if(isSuccess == true)
                 {
                     _logger.LogInformation("create new role success");
@@ -143,7 +148,8 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("delete role operation start");
-                bool isSuccess = await _roleRepository.Delete(roleId);
+                await _roleRepository.Delete(roleId);
+                bool isSuccess = await _roleRepository.SaveChangeAsync() > 0;
                 if (isSuccess == true)
                 {
                     _logger.LogInformation("delete role success");
@@ -201,10 +207,11 @@ namespace CMC.TS.FT.Api.Services
                 role.RoleName = updateRoleDTO.RoleName;
                 role.UpdateBy = Guid.Empty;
                 role.UpdateAt = DateTime.UtcNow;
+                role.CreateAt = role.CreateAt;
                 //bug không gán giá trị cho CreateAt, khiến khi update nó tự gán giá trị default 0001-01-01 00:00:00.0000000. Mất dữ liệu gốc
 
 
-                return await _roleRepository.Update(role);
+                return await _roleRepository.SaveChangeAsync() > 0;
             }
             catch (Exception e)
             {

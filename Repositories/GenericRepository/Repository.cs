@@ -5,31 +5,27 @@ namespace CMC.TS.FT.Api.Repositories.GenericRepository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        SQLServerDbContext _context;
+        private readonly SQLServerDbContext _context;
         public Repository(SQLServerDbContext context)
         {
             _context = context;
         }
 
-        public async Task<bool> Create(T? entity)
+        public void Create(T entity)
         {
-            if (entity == null)
-            {
-                return false;
-            }
             _context.Set<T>().Add(entity);
-            return await _context.SaveChangesAsync() > 0;
+            //return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             T? entity = await GetById(id);
-            if (entity == null) 
+            if(entity == null)
             {
-                return false;
+                return;
             }
             _context.Set<T>().Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            //return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<List<T>?> GetAll()
@@ -42,7 +38,7 @@ namespace CMC.TS.FT.Api.Repositories.GenericRepository
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task<bool> Update(T? entity)
+        /*public async Task<bool> Update(T? entity)
         {
             if (entity == null)
             {
@@ -57,6 +53,12 @@ namespace CMC.TS.FT.Api.Repositories.GenericRepository
             {
                 return false;
             }
+        }*/
+
+        public async Task<int> SaveChangeAsync()
+        {
+            return await _context.SaveChangesAsync();
         }
     }
+
 }
