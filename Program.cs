@@ -26,6 +26,8 @@ namespace CMC.TS.FT.Api
             builder.Services.AddScoped<PermissionService>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<RoleService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<UserService>();
 
 
             var app = builder.Build();
