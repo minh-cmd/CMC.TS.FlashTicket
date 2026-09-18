@@ -28,21 +28,17 @@ namespace CMC.TS.FT.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("PermissionDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CreateBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PermissionDisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PermissionId");
 
