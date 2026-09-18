@@ -4,7 +4,7 @@
     {
         public Guid RoleId { get; set; }
         public string RoleName { get; set; }
-        public string IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         
         public Role()
         {
