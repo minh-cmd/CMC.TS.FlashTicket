@@ -1,4 +1,5 @@
 ﻿using CMC.TS.FT.Api.DTO.Role;
+using CMC.TS.FT.Api.Entities;
 using CMC.TS.FT.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +40,7 @@ namespace CMC.TS.FT.Api.Controllers
         [Authorize(Roles = "roles.read.all")]
         public async Task<IActionResult> DisplayAllRole()
         {
-            List<DisplayRoleDTO>? displayRoles = await _roleService.DisplayAllRole();
+            List<Role>? displayRoles = await _roleService.DisplayAllRole();
             return Ok(displayRoles);
         }
 
