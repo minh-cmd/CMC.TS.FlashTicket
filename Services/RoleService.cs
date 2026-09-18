@@ -148,8 +148,7 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("delete role operation start");
-                await _roleRepository.Delete(roleId);
-                bool isSuccess = await _roleRepository.SaveChangeAsync() > 0;
+                bool isSuccess = await _roleRepository.SoftDelete(roleId);
                 if (isSuccess == true)
                 {
                     _logger.LogInformation("delete role success");
@@ -167,12 +166,12 @@ namespace CMC.TS.FT.Api.Services
                 return false;
             }
         }
-        public async Task<List<DisplayRoleDTO>?> DisplayAllRole()
+        public async Task<List<Role>?> DisplayAllRole()
         {
             try
             {
                 _logger.LogInformation("display all role operation start");
-                List<Role>? roles = await _roleRepository.GetAll();
+                List<Role>? roles = await _roleRepository.GetAll(x=>x.IsDeleted == false);
 
                 if(roles == null || roles.Count == 0)
                 {
@@ -180,11 +179,11 @@ namespace CMC.TS.FT.Api.Services
                     return null;
                 }
 
-                List<DisplayRoleDTO> displayRoleDTOs = roles.Select(r => new DisplayRoleDTO
+                /*List<DisplayRoleDTO> displayRoleDTOs = roles.Select(r => new DisplayRoleDTO
                 {
                     RoleName = r.RoleName,
-                }).ToList();
-                return displayRoleDTOs;
+                }).ToList();*/
+                return roles;
             }
             catch (Exception e)
             {

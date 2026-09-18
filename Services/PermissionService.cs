@@ -19,7 +19,7 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("start display permission operation");
-                List<Permission>? a = await _repository.GetAll();
+                List<Permission>? a = await _repository.GetAll(null);
                 return a;
             }
             catch (Exception e)

@@ -1,5 +1,6 @@
 ﻿using CMC.TS.FT.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CMC.TS.FT.Api.Repositories.GenericRepository
 {
@@ -28,9 +29,13 @@ namespace CMC.TS.FT.Api.Repositories.GenericRepository
             //return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<List<T>?> GetAll()
+        public async Task<List<T>?> GetAll(Expression<Func<T, bool>>? a)
         {
-            return await _context.Set<T>().Where(a=>true).ToListAsync();
+            if (a != null) 
+            { 
+                return await _context.Set<T>().Where(a).ToListAsync();
+            }
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<T?> GetById(Guid id)

@@ -108,7 +108,7 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("display all user operation start");
-                List<User>? users = await _userRepository.GetAll();
+                List<User>? users = await _userRepository.GetAll(u=>u.IsDeleted==true);
                 if(users == null)
                 {
                     _logger.LogInformation("user list is empty");
