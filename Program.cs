@@ -54,7 +54,7 @@ namespace CMC.TS.FT.Api
                     }
                 });
             });
-            builder.Services.AddDbContext<SQLServerDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<SQLServerDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerConnection")));
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<PermissionService>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
