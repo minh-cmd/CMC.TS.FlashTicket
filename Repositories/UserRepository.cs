@@ -55,6 +55,18 @@ namespace CMC.TS.FT.Api.Repositories
             return await a.ToListAsync();
         }
 
+        public async Task<List<string>?> GetRoleNameByUserId(Guid id)
+        {
+            var a = await (from user in _context.User
+                    join userRole in _context.UserRole on user.UserId equals userRole.UserId
+                    join role in _context.Role on userRole.RoleId equals role.RoleId
+                    join rolePermission in _context.RolePermission on role.RoleId equals rolePermission.RoleId
+                    join permission in _context.Permission on rolePermission.PermissionId equals permission.PermissionId
+                    where user.UserId == id
+                    select permission.PermissionName).ToListAsync();
+            return a;
+        }
+
         //for guest signing up
         public async Task AssignRoleGuest(Guid Userid)
         {
@@ -86,5 +98,7 @@ namespace CMC.TS.FT.Api.Repositories
             _context.UserRole.AddRange(userRole);
             //return await _context.SaveChangesAsync() > 0;
         }
+
+
     }
 }
