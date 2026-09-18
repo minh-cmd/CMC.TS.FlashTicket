@@ -1,5 +1,6 @@
 ﻿using CMC.TS.FT.Api.DTO.Role;
 using CMC.TS.FT.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,8 @@ namespace CMC.TS.FT.Api.Controllers
         }
         
         [HttpPut("{roleId:guid}/permission")]
-        public async Task<IActionResult> AssignPermissionToRoleDTO([FromRoute] Guid roleId, [FromBody] List<Guid>? permissionIds)
+        [Authorize(Roles = "roles.assign_permissions.all")]
+        public async Task<IActionResult> AssignPermissionToRoleDTO([FromRoute] Guid roleId, [FromBody] List<Guid>? permissionIds)       
         {
             
             AssignPermissionToRoleDTO permissionToRoleDTO = new AssignPermissionToRoleDTO
@@ -34,6 +36,7 @@ namespace CMC.TS.FT.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "roles.read.all")]
         public async Task<IActionResult> DisplayAllRole()
         {
             List<DisplayRoleDTO>? displayRoles = await _roleService.DisplayAllRole();
@@ -41,6 +44,7 @@ namespace CMC.TS.FT.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "roles.delete.all")]
         public async Task<IActionResult> RemoveRole(Guid id)
         {
             bool isSuccess = await _roleService.DeleteRole(id);
@@ -51,6 +55,7 @@ namespace CMC.TS.FT.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "roles.create.all")]
         public async Task<IActionResult> CreateNewRole(CreateRoleDTO roleDTO)
         {
             bool isSuccess = await _roleService.CreateNewRole(roleDTO);
@@ -61,6 +66,7 @@ namespace CMC.TS.FT.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "roles.update.all")]
         public async Task<IActionResult> UpdateRole(Guid id, UpdateRoleDTO roleDTO)
         {
             bool isSuccess = await _roleService.UpdateRole(id, roleDTO);

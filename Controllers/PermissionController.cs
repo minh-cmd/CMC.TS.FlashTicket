@@ -1,5 +1,6 @@
 ﻿using CMC.TS.FT.Api.Entities;
 using CMC.TS.FT.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace CMC.TS.FT.Api.Controllers
             _permissionService = permissionService;
         }
         [HttpGet]
+        [Authorize(Roles = "permissions.read.all")]
         public async Task<IActionResult> DisplayPermission()
         {
             List<Permission>? a = await _permissionService.DisplayAllPermission();
