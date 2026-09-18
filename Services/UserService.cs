@@ -57,7 +57,6 @@ namespace CMC.TS.FT.Api.Services
             }
         }
 
-        //admin
         public async Task<bool> UpdateUser(Guid Id, CreateUserDTO createUser)
         {
             try
@@ -174,7 +173,6 @@ namespace CMC.TS.FT.Api.Services
                     _logger.LogError("can't find user {id}", id);
                     return false;
                 }
-                user.Email = newProfile.Email;
                 user.Name = newProfile.Name;
                 return await _userRepository.SaveChangeAsync() > 0;
             }
