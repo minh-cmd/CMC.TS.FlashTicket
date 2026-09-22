@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMC.TS.FT.Api.Migrations
 {
     [DbContext(typeof(SQLServerDbContext))]
-    [Migration("20260903081125_AddIsDeleteAndIsActiveField")]
-    partial class AddIsDeleteAndIsActiveField
+    [Migration("20260921091854_InitialTest")]
+    partial class InitialTest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,21 +31,17 @@ namespace CMC.TS.FT.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("PermissionDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CreateBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PermissionDisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PermissionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PermissionId");
 
@@ -66,6 +62,9 @@ namespace CMC.TS.FT.Api.Migrations
 
                     b.Property<Guid>("CreateBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
