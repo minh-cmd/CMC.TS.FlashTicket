@@ -34,7 +34,8 @@ namespace CMC.TS.FT.Api.Controllers
         [Authorize(Roles = "users.create.all")]
         public async Task<IActionResult> CreateUser(CreateUserDTO createUserDTO)
         {
-            bool isSuccess = await _userService.CreateUser(createUserDTO);
+            Guid createdUser = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isSuccess = await _userService.CreateUser(createdUser, createUserDTO);
             if (isSuccess)
                 return Ok();
             else
@@ -43,9 +44,22 @@ namespace CMC.TS.FT.Api.Controllers
 
         [HttpPut("{id:guid}")]
         [Authorize(Roles = "users.update.all")]
-        public async Task<IActionResult> UpdateUser(Guid id, UpdateProfileDTO profileDTO)
+        public async Task<IActionResult> UpdateUser(Guid id, CreateUserDTO profileDTO)
         {
-            bool isSuccess = await _userService.UpdateProfile(id, profileDTO);
+            Guid updateById = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isSuccess = await _userService.UpdateUser(id, profileDTO, updateById);
+            if (isSuccess)
+                return Ok();
+            else
+                return BadRequest();
+        }
+
+        [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "users.delete.all")]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            Guid updateby = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isSuccess = await _userService.DeleteUser(id, updateby);
             if (isSuccess)
                 return Ok();
             else
@@ -73,7 +87,7 @@ namespace CMC.TS.FT.Api.Controllers
         public async Task<IActionResult> DeleteMe() 
         {
             Guid id = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            bool isSuccess = await _userService.DeleteUser(id);
+            bool isSuccess = await _userService.DeleteUser(id, id);
             if (isSuccess)
                 return Ok();
             else 
@@ -84,7 +98,7 @@ namespace CMC.TS.FT.Api.Controllers
         [Authorize(Roles = "users.update.own")]
         public async Task<IActionResult> UpdateMe(UpdateProfileDTO profileDTO)
         {
-            Guid id = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Guid id= JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
             bool isSuccess = await _userService.UpdateProfile(id, profileDTO);
             if (isSuccess)
                 return Ok();

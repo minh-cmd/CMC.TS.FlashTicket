@@ -1,8 +1,10 @@
 ﻿using CMC.TS.FT.Api.DTO.Auth;
+using CMC.TS.FT.Api.HelperClass;
 using CMC.TS.FT.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CMC.TS.FT.Api.Controllers
 {

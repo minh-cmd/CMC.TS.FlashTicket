@@ -1,9 +1,11 @@
 ﻿using CMC.TS.FT.Api.DTO.Role;
 using CMC.TS.FT.Api.Entities;
+using CMC.TS.FT.Api.HelperClass;
 using CMC.TS.FT.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CMC.TS.FT.Api.Controllers
 {
@@ -48,7 +50,8 @@ namespace CMC.TS.FT.Api.Controllers
         [Authorize(Roles = "roles.delete.all")]
         public async Task<IActionResult> RemoveRole(Guid id)
         {
-            bool isSuccess = await _roleService.DeleteRole(id);
+            Guid updateBy = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isSuccess = await _roleService.DeleteRole(id, updateBy);
             if(isSuccess)
                 return Ok();
             else
@@ -59,7 +62,8 @@ namespace CMC.TS.FT.Api.Controllers
         [Authorize(Roles = "roles.create.all")]
         public async Task<IActionResult> CreateNewRole(CreateRoleDTO roleDTO)
         {
-            bool isSuccess = await _roleService.CreateNewRole(roleDTO);
+            Guid createBy = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isSuccess = await _roleService.CreateNewRole(roleDTO, createBy);
             if (isSuccess)
                 return Ok();
             else
@@ -70,7 +74,9 @@ namespace CMC.TS.FT.Api.Controllers
         [Authorize(Roles = "roles.update.all")]
         public async Task<IActionResult> UpdateRole(Guid id, UpdateRoleDTO roleDTO)
         {
-            bool isSuccess = await _roleService.UpdateRole(id, roleDTO);
+
+            Guid updateBy = JwtExtract.ExtractUserId(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isSuccess = await _roleService.UpdateRole(id, roleDTO, updateBy);
             if (isSuccess)
                 return Ok();
             else

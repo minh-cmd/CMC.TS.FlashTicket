@@ -18,7 +18,7 @@ namespace CMC.TS.FT.Api.Services
         }
 
         //admin
-        public async Task<bool> CreateUser(CreateUserDTO createUser)
+        public async Task<bool> CreateUser(Guid id, CreateUserDTO createUser)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace CMC.TS.FT.Api.Services
                     Name = createUser.Name,
                     PasswordHash = PasswordHash.Hash(createUser.PassWord),
                     CreateAt = DateTime.UtcNow,
-                    CreateBy = Guid.Empty,
+                    CreateBy = id,
                     IsActive = true,
                     IsDeleted = false,
                     Email = createUser.Email
@@ -57,7 +57,7 @@ namespace CMC.TS.FT.Api.Services
             }
         }
 
-        public async Task<bool> UpdateUser(Guid Id, CreateUserDTO createUser)
+        public async Task<bool> UpdateUser(Guid Id, CreateUserDTO createUser, Guid updateById)
         {
             try
             {
@@ -70,6 +70,8 @@ namespace CMC.TS.FT.Api.Services
                 }
                 user.Name = createUser.Name;
                 user.Email = createUser.Email;
+                user.UpdateBy = updateById;
+                user.UpdateAt = DateTime.UtcNow;
                 user.PasswordHash = PasswordHash.Hash(createUser.PassWord);
 
                 return await _userRepository.SaveChangeAsync() > 0;
@@ -82,7 +84,7 @@ namespace CMC.TS.FT.Api.Services
         }
 
         //admin and user
-        public async Task<bool> DeleteUser(Guid id)
+        public async Task<bool> DeleteUser(Guid id, Guid updateBy)
         {
             try
             {
@@ -93,7 +95,7 @@ namespace CMC.TS.FT.Api.Services
                     _logger.LogError("can't find the user by id");
                     return false;
                 }
-                return await _userRepository.UserSoftDelete(id);
+                return await _userRepository.UserSoftDelete(id, updateBy);
             }
             catch (Exception e)
             {
@@ -108,7 +110,7 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("display all user operation start");
-                List<User>? users = await _userRepository.GetAll(u=>u.IsDeleted==true);
+                List<User>? users = await _userRepository.GetAll(u=>u.IsDeleted==false);
                 if(users == null)
                 {
                     _logger.LogInformation("user list is empty");
@@ -174,6 +176,8 @@ namespace CMC.TS.FT.Api.Services
                     return false;
                 }
                 user.Name = newProfile.Name;
+                user.UpdateBy = id;
+                user.UpdateAt = DateTime.UtcNow;
                 return await _userRepository.SaveChangeAsync() > 0;
             }
             catch (Exception e)

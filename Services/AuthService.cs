@@ -69,9 +69,10 @@ namespace CMC.TS.FT.Api.Services
             try
             {
                 _logger.LogInformation("login operation start");
+                var id = Guid.NewGuid();
                 User user = new User
                 {
-                    UserId = Guid.NewGuid(),
+                    UserId = id,
                     Name = createUser.Name,
                     Email = createUser.Email,
                     PasswordHash = PasswordHash.Hash(createUser.Password),
@@ -79,7 +80,7 @@ namespace CMC.TS.FT.Api.Services
                     IsDeleted = false,
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = null,
-                    CreateBy = Guid.Empty,
+                    CreateBy = id,
                     UpdateBy = Guid.Empty
                 };
                 _userRepository.Create(user);

@@ -105,19 +105,20 @@ namespace CMC.TS.FT.Api.Services
                 return false;
             }
         }
-        public async Task<bool> CreateNewRole(CreateRoleDTO createRole)
+        public async Task<bool> CreateNewRole(CreateRoleDTO createRole, Guid createBy)
         {
             try
             {
                 _logger.LogInformation("create new role operation start");
+                var roleId = Guid.NewGuid();
                 Role role = new Role 
                 { 
-                    RoleId = Guid.NewGuid(),
+                    RoleId = roleId,
                     RoleName = createRole.RoleName,
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = null,
-                    CreateBy = Guid.Empty,
-                    UpdateBy = Guid.Empty
+                    CreateBy = createBy,
+                    UpdateBy = null
                 };
                 if (role == null)
                 {
@@ -143,12 +144,12 @@ namespace CMC.TS.FT.Api.Services
                 return false;
             }
         }
-        public async Task<bool> DeleteRole(Guid roleId)
+        public async Task<bool> DeleteRole(Guid roleId, Guid updateBy)
         {
             try
             {
                 _logger.LogInformation("delete role operation start");
-                bool isSuccess = await _roleRepository.SoftDelete(roleId);
+                bool isSuccess = await _roleRepository.SoftDelete(roleId, updateBy);
                 if (isSuccess == true)
                 {
                     _logger.LogInformation("delete role success");
@@ -191,7 +192,7 @@ namespace CMC.TS.FT.Api.Services
                 return null;
             }
         }
-        public async Task<bool> UpdateRole(Guid id, UpdateRoleDTO updateRoleDTO)
+        public async Task<bool> UpdateRole(Guid id, UpdateRoleDTO updateRoleDTO, Guid updateBy)
         {
             try
             {
@@ -204,7 +205,7 @@ namespace CMC.TS.FT.Api.Services
                 }
 
                 role.RoleName = updateRoleDTO.RoleName;
-                role.UpdateBy = Guid.Empty;
+                role.UpdateBy = updateBy;
                 role.UpdateAt = DateTime.UtcNow;
                 role.CreateAt = role.CreateAt;
                 //bug không gán giá trị cho CreateAt, khiến khi update nó tự gán giá trị default 0001-01-01 00:00:00.0000000. Mất dữ liệu gốc
@@ -218,5 +219,6 @@ namespace CMC.TS.FT.Api.Services
                 return false;
             }
         }   
+
     }
 }

@@ -21,9 +21,11 @@ namespace CMC.TS.FT.Api.Repositories
             return await _context.User.Where(u => u.Email == email).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> UserSoftDelete(Guid id)
+        public async Task<bool> UserSoftDelete(Guid id, Guid updateBy)
         {
-            int rowAffect = await _context.User.Where(u => u.UserId == id).ExecuteUpdateAsync(setter => setter.SetProperty(user => user.IsDeleted, false));
+            int rowAffect = await _context.User.Where(u => u.UserId == id).ExecuteUpdateAsync(setter => setter.SetProperty(user => user.IsDeleted, true)
+                                                                                                                .SetProperty(user=> user.UpdateBy, id)
+                                                                                                                .SetProperty(user=>user.UpdateAt, DateTime.UtcNow));
             return rowAffect > 0;
         }
 

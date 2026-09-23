@@ -9,7 +9,7 @@ namespace CMC.TS.FT.Api.Repositories.IRepositories
         Task<bool> AddRolePermissionByRoleId(RolePermission rolePermission);
         Task<bool> AddManyPermissionToRoleId(List<RolePermission> rolePermissions);
 
-        Task<bool> SoftDelete(Guid roleId);
+        Task<bool> SoftDelete(Guid roleId, Guid updateBy);
 
     }
 }

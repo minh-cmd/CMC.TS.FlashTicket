@@ -8,7 +8,7 @@ namespace CMC.TS.FT.Api.Repositories.IRepositories
     public interface IUserRepository : IRepository<User>
     {
         Task<User?> GetUserByEmail(string email);
-        Task<bool> UserSoftDelete(Guid id);
+        Task<bool> UserSoftDelete(Guid id, Guid updateBy);
         Task<List<DisplayUserDTO>?> GetAllUserWithRoleName();
         Task AssignRoleGuest(Guid Userid);
         Task AssignRoleAdmin(Guid UserId, List<Guid> RoleIds);

@@ -33,9 +33,11 @@ namespace CMC.TS.FT.Api.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> SoftDelete(Guid roleId) 
+        public async Task<bool> SoftDelete(Guid roleId, Guid updateBy) 
         {
-            return await _context.Role.Where(r => r.RoleId == roleId).ExecuteUpdateAsync(a=>a.SetProperty(b=>b.IsDeleted, true)) > 0;
+            return await _context.Role.Where(r => r.RoleId == roleId).ExecuteUpdateAsync(a=>a.SetProperty(b=>b.IsDeleted, true)
+                                                                                            .SetProperty(b=>b.UpdateAt, DateTime.UtcNow)
+                                                                                            .SetProperty(b=>b.UpdateBy, updateBy)) > 0;
         }
 
 
