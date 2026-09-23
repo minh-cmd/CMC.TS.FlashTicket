@@ -1,5 +1,6 @@
 
 using CMC.TS.FT.Api.Data;
+using CMC.TS.FT.Api.HelperClass;
 using CMC.TS.FT.Api.Repositories;
 using CMC.TS.FT.Api.Repositories.GenericRepository;
 using CMC.TS.FT.Api.Repositories.IRepositories;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using Microsoft.OpenApi ;
+using System.Reflection.Metadata;
 using System.Runtime;
 using System.Text;
 
@@ -17,7 +19,7 @@ namespace CMC.TS.FT.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +84,59 @@ namespace CMC.TS.FT.Api
             });
 
             var app = builder.Build();
+
+            //data seeding thêm tài khoản admin nếu như không có
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<SQLServerDbContext>();
+
+                // Step 1: Ensure DB exists
+                await context.Database.EnsureCreatedAsync();
+
+                // Step 2: Ensure "Admin" Role exists
+                var adminRole = await context.Role.FirstOrDefaultAsync(r => r.RoleName == "Admin");
+                if (adminRole == null)
+                {
+                    adminRole = new Entities.Role
+                    {
+                        RoleId = Guid.NewGuid(),
+                        RoleName = "Admin"
+                    };
+                    context.Role.Add(adminRole);
+                    await context.SaveChangesAsync(); // Save role first to guarantee ID existence
+                }
+
+                // Step 3: Check if the Admin user exists
+                var adminUser = await context.User.FirstOrDefaultAsync(u => u.Email == "admin@gmail.com");
+                if (adminUser == null)
+                {
+                    Guid userId = Guid.NewGuid();
+                    adminUser = new Entities.User
+                    {
+                        UserId = userId,
+                        Name = "seedAdmin",
+                        Email = builder.Configuration["SeedAdmin:Email"],
+                        PasswordHash = PasswordHash.Hash(builder.Configuration["SeedAdmin:Password"]),
+                        IsActive = true,
+                        IsDeleted = false,
+                        CreateAt = DateTime.UtcNow,
+                        CreateBy = Guid.Empty,
+                        UpdateAt = null,
+                        UpdateBy = null,
+                    };
+                    context.User.Add(adminUser);
+
+                    // Step 4: Map User to Admin Role
+                    context.UserRole.Add(new Entities.UserRole
+                    {
+                        UserId = adminUser.UserId,
+                        RoleId = adminRole.RoleId,
+                        CreateAt = DateTime.UtcNow
+                    });
+
+                    await context.SaveChangesAsync();
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
